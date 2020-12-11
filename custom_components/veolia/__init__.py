@@ -11,10 +11,19 @@ import logging
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
+from homeassistant.helpers.typing import HomeAssistantType
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from pyolia.client import VeoliaClient
 
-from .const import CONF_PASSWORD, CONF_USERNAME, DOMAIN, PLATFORMS, STARTUP_MESSAGE
+from .const import (
+    API,
+    CONF_PASSWORD,
+    CONF_USERNAME,
+    COORDINATOR,
+    DOMAIN,
+    PLATFORMS,
+    STARTUP_MESSAGE,
+)
 
 SCAN_INTERVAL = timedelta(days=1)
 
@@ -35,69 +44,45 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     username = entry.data.get(CONF_USERNAME)
     password = entry.data.get(CONF_PASSWORD)
 
-    coordinator = VeoliaDataUpdateCoordinator(
-        hass, username=username, password=password
+    hass.data[DOMAIN][API] = VeoliaClient(username, password)
+
+    async def _get_consumption():
+        """Return the water consumption for each day of the current month."""
+        now = datetime.now()
+        if now.day < 4:
+            now = now - timedelta(days=3)
+        return await hass.data[DOMAIN][API].get_consumption(now.month, now.year)
+
+    coordinator = DataUpdateCoordinator(
+        hass,
+        _LOGGER,
+        name="somfy device update",
+        update_method=_get_consumption,
+        update_interval=SCAN_INTERVAL,
     )
+
     await coordinator.async_refresh()
 
     if not coordinator.last_update_success:
         raise ConfigEntryNotReady
 
-    hass.data[DOMAIN][entry.entry_id] = coordinator
+    hass.data[DOMAIN][COORDINATOR] = coordinator
 
     for platform in PLATFORMS:
-        if entry.options.get(platform, True):
-            coordinator.platforms.append(platform)
-            hass.async_add_job(
-                hass.config_entries.async_forward_entry_setup(entry, platform)
-            )
+        hass.async_add_job(
+            hass.config_entries.async_forward_entry_setup(entry, platform)
+        )
 
-    entry.add_update_listener(async_reload_entry)
     return True
 
 
-class VeoliaDataUpdateCoordinator(DataUpdateCoordinator):
-    """Class to manage fetching data from the API."""
-
-    def __init__(self, hass, username, password):
-        """Initialize."""
-        self.api = VeoliaClient(username, password)
-        self.platforms = []
-
-        super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=SCAN_INTERVAL)
-
-    async def _async_update_data(self):
-        """Update data via library."""
-        now = datetime.now()
-        if now.day < 4:
-            now = now - timedelta(days=3)
-        try:
-            consumption = await self.api.get_consumption(now.month, now.year)
-            last = list(consumption.items())[-1]
-            return {"time": last[0], "consumption": last[1]}
-        except Exception as exception:
-            raise UpdateFailed(exception)
-
-
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
-    """Handle removal of an entry."""
-    coordinator = hass.data[DOMAIN][entry.entry_id]
-    unloaded = all(
-        await asyncio.gather(
-            *[
-                hass.config_entries.async_forward_entry_unload(entry, platform)
-                for platform in PLATFORMS
-                if platform in coordinator.platforms
-            ]
-        )
+async def async_unload_entry(hass: HomeAssistantType, entry: ConfigEntry):
+    """Unload a config entry."""
+    hass.data[DOMAIN].pop(API, None)
+    await asyncio.gather(
+        *[
+            hass.config_entries.async_forward_entry_unload(entry, component)
+            for component in PLATFORMS
+        ]
     )
-    if unloaded:
-        hass.data[DOMAIN].pop(entry.entry_id)
-
-    return unloaded
-
-
-async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry):
-    """Reload config entry."""
-    await async_unload_entry(hass, entry)
-    await async_setup_entry(hass, entry)
+    return True

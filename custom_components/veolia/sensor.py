@@ -1,14 +1,13 @@
 """Sensor platform for Veolia."""
 from homeassistant.const import VOLUME_LITERS
-from homeassistant.util import slugify
 
-from .const import DEFAULT_NAME, DOMAIN, SENSOR
+from .const import COORDINATOR, DOMAIN
 from .entity import VeoliaEntity
 
 
 async def async_setup_entry(hass, entry, async_add_devices):
     """Setup sensor platform."""
-    coordinator = hass.data[DOMAIN][entry.entry_id]
+    coordinator = hass.data[DOMAIN][COORDINATOR]
     async_add_devices([VeoliaDailyUsageSensor(coordinator, entry)])
 
 
@@ -23,7 +22,7 @@ class VeoliaDailyUsageSensor(VeoliaEntity):
     @property
     def state(self):
         """Return the state of the sensor."""
-        return self.coordinator.data.get("consumption")
+        return list(self.coordinator.data.values())[-1]
 
     @property
     def icon(self) -> str:

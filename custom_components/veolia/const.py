@@ -1,4 +1,7 @@
 """Constants for Veolia."""
+
+from homeassistant.components.sensor import DOMAIN as SENSOR
+
 # Base component constants
 NAME = "Veolia"
 DOMAIN = "veolia"
@@ -8,7 +11,6 @@ VERSION = "0.1.0"
 ISSUE_URL = "https://github.com/tetienne/veolia-custom-component/issues"
 
 # Platforms
-SENSOR = "sensor"
 PLATFORMS = [SENSOR]
 
 
@@ -18,6 +20,8 @@ CONF_PASSWORD = "password"
 
 # Defaults
 DEFAULT_NAME = DOMAIN
+API = "api"
+COORDINATOR = "coordinator"
 
 
 STARTUP_MESSAGE = f"""
