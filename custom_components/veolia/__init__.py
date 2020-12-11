@@ -16,7 +16,7 @@ from pyolia.client import VeoliaClient
 
 from .const import CONF_PASSWORD, CONF_USERNAME, DOMAIN, PLATFORMS, STARTUP_MESSAGE
 
-SCAN_INTERVAL = timedelta(seconds=30)
+SCAN_INTERVAL = timedelta(days==1)
 
 _LOGGER = logging.getLogger(__name__)
 
