@@ -1,0 +1,13 @@
+{
+    "_copy_without_render": [
+        ".github/workflows/*.yml",
+        ".github/workflows/*.yaml"
+    ],
+    "_template": "gh:oncleben31/cookiecutter-homeassistant-custom-component",
+    "class_name_prefix": "Veolia",
+    "domain_name": "veolia",
+    "friendly_name": "Veolia",
+    "github_user": "tetienne",
+    "project_name": "veolia",
+    "version": "0.0.0"
+}

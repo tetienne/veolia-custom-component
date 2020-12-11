@@ -1,0 +1,13 @@
+{
+  "domain": "veolia",
+  "name": "Veolia",
+  "documentation": "https://github.com/tetienne/veolia-custom-component",
+  "dependencies": [],
+  "config_flow": true,
+  "codeowners": [
+    "@tetienne"
+  ],
+  "requirements": [
+    "pyolia==0.1.0"
+  ]
+}
