@@ -11,8 +11,10 @@ import logging
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
+from homeassistant.helpers import aiohttp_client
 from homeassistant.helpers.typing import HomeAssistantType
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+
 from pyolia.client import VeoliaClient
 
 from .const import (
@@ -44,7 +46,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     username = entry.data.get(CONF_USERNAME)
     password = entry.data.get(CONF_PASSWORD)
 
-    hass.data[DOMAIN][API] = VeoliaClient(username, password)
+    session = aiohttp_client.async_create_clientsession(hass)
+    hass.data[DOMAIN][API] = VeoliaClient(username, password, session)
 
     async def _get_consumption():
         """Return the water consumption for each day of the current month."""
