@@ -19,13 +19,14 @@ class VeoliaEntity(CoordinatorEntity):
     @property
     def device_info(self):
         return {
-            "identifiers": {DOMAIN},
+            "identifiers": {(self.config_entry.entry_id, DOMAIN)},
             "manufacturer": NAME,
         }
 
     @property
     def device_state_attributes(self):
         """Return the state attributes."""
+        last_timestamp = list(self.coordinator.data.keys())[-1]
         return {
-            "last_report": datetime.fromtimestamp(self.coordinator.data.get("time")),
+            "last_report": datetime.fromtimestamp(last_timestamp),
         }
