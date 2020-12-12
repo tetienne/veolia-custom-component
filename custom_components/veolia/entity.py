@@ -21,6 +21,7 @@ class VeoliaEntity(CoordinatorEntity):
         return {
             "identifiers": {(self.config_entry.entry_id, DOMAIN)},
             "manufacturer": NAME,
+            "name": NAME,
         }
 
     @property
