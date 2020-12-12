@@ -22,7 +22,6 @@ from .const import (
     COORDINATOR,
     DOMAIN,
     PLATFORMS,
-    STARTUP_MESSAGE,
 )
 
 SCAN_INTERVAL = timedelta(days=1)
@@ -39,7 +38,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Set up this integration using UI."""
     if hass.data.get(DOMAIN) is None:
         hass.data.setdefault(DOMAIN, {})
-        _LOGGER.info(STARTUP_MESSAGE)
 
     username = entry.data.get(CONF_USERNAME)
     password = entry.data.get(CONF_PASSWORD)
