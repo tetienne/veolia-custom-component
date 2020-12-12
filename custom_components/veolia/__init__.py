@@ -54,7 +54,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     coordinator = DataUpdateCoordinator(
         hass,
         _LOGGER,
-        name="somfy device update",
+        name="veolia consumption update",
         update_method=_get_consumption,
         update_interval=SCAN_INTERVAL,
     )
