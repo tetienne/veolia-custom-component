@@ -1,7 +1,7 @@
 """Sensor platform for Veolia."""
-from homeassistant.const import VOLUME_LITERS
+import datetime
 
-from .const import COORDINATOR, DOMAIN
+from .const import COORDINATOR, DAILY, DOMAIN, HOURLY
 from .entity import VeoliaEntity
 
 
@@ -10,10 +10,26 @@ async def async_setup_entry(hass, entry, async_add_devices):
     coordinator = hass.data[DOMAIN][COORDINATOR]
     async_add_devices(
         [
+            VeoliaHourlyUsageSensor(coordinator, entry),
             VeoliaDailyUsageSensor(coordinator, entry),
             VeoliaMonthlyUsageSensor(coordinator, entry),
         ]
     )
+
+
+class VeoliaHourlyUsageSensor(VeoliaEntity):
+    """Monitors the hourly water usage."""
+
+    @property
+    def name(self):
+        """Return the name of the sensor."""
+        return "veolia_hourly_consumption"
+
+    @property
+    def state(self):
+        """Return the state of the sensor."""
+        hour = datetime.datetime.now().hour
+        return self.coordinator.data[HOURLY][hour - 1]
 
 
 class VeoliaDailyUsageSensor(VeoliaEntity):
@@ -27,21 +43,11 @@ class VeoliaDailyUsageSensor(VeoliaEntity):
     @property
     def state(self):
         """Return the state of the sensor."""
-        return list(self.coordinator.data.values())[-1]
-
-    @property
-    def icon(self) -> str:
-        """Return the daily usage icon."""
-        return "mdi:water"
-
-    @property
-    def unit_of_measurement(self) -> str:
-        """Return liter as the unit measurement for water."""
-        return VOLUME_LITERS
+        return self.coordinator.data[DAILY][-1]
 
 
 class VeoliaMonthlyUsageSensor(VeoliaEntity):
-    """Monitors the daily water usage."""
+    """Monitors the monthly water usage."""
 
     @property
     def name(self):
@@ -51,14 +57,4 @@ class VeoliaMonthlyUsageSensor(VeoliaEntity):
     @property
     def state(self):
         """Return the state of the sensor."""
-        return sum(self.coordinator.data.values())
-
-    @property
-    def icon(self) -> str:
-        """Return the daily usage icon."""
-        return "mdi:water"
-
-    @property
-    def unit_of_measurement(self) -> str:
-        """Return liter as the unit measurement for water."""
-        return VOLUME_LITERS
+        return sum(self.coordinator.data[DAILY])
