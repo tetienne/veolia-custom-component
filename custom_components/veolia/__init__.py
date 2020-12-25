@@ -52,7 +52,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     hass.data[DOMAIN][API] = VeoliaClient(username, password, session)
 
     async def _get_consumption():
-        """Return the water consumption for each day of the current month."""
+        """Return the water consumption."""
         api = hass.data[DOMAIN][API]
         last_report_date = api.last_report_date
         last_report_timestamp = time.mktime(
