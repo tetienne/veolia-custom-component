@@ -7,6 +7,7 @@ https://github.com/tetienne/veolia-custom-component
 import asyncio
 from datetime import datetime, timedelta
 import logging
+import time
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config, HomeAssistant
@@ -14,7 +15,6 @@ from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers import aiohttp_client
 from homeassistant.helpers.typing import HomeAssistantType
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
-
 from pyolia.client import VeoliaClient
 
 from .const import (
@@ -22,11 +22,15 @@ from .const import (
     CONF_PASSWORD,
     CONF_USERNAME,
     COORDINATOR,
+    DAILY,
     DOMAIN,
+    HOURLY,
+    LAST_REPORT_TIMESTAMP,
     PLATFORMS,
 )
 
-SCAN_INTERVAL = timedelta(days=1)
+SCAN_INTERVAL = timedelta(seconds=30)
+
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -49,10 +53,33 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
 
     async def _get_consumption():
         """Return the water consumption for each day of the current month."""
-        now = datetime.now()
-        if now.day < 4:
-            now = now - timedelta(days=3)
-        return await hass.data[DOMAIN][API].get_consumption(now.month, now.year)
+        api = hass.data[DOMAIN][API]
+        last_report_date = api.last_report_date
+        last_report_timestamp = time.mktime(
+            datetime(
+                last_report_date.year, last_report_date.month, last_report_date.day
+            ).timetuple()
+        )
+
+        previous_data = hass.data[DOMAIN][COORDINATOR].data
+        if (
+            previous_data
+            and previous_data[LAST_REPORT_TIMESTAMP] == last_report_timestamp
+        ):
+            return previous_data
+
+        daily_consumption = await api.get_consumption(
+            last_report_date.month, last_report_date.year
+        )
+
+        hourly_consumption = await api.get_consumption(
+            last_report_date.month, last_report_date.year, last_report_date.day
+        )
+        return {
+            DAILY: daily_consumption,
+            HOURLY: hourly_consumption,
+            LAST_REPORT_TIMESTAMP: last_report_timestamp,
+        }
 
     coordinator = DataUpdateCoordinator(
         hass,
@@ -62,12 +89,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         update_interval=SCAN_INTERVAL,
     )
 
+    hass.data[DOMAIN][COORDINATOR] = coordinator
+
     await coordinator.async_refresh()
 
     if not coordinator.last_update_success:
         raise ConfigEntryNotReady
-
-    hass.data[DOMAIN][COORDINATOR] = coordinator
 
     for platform in PLATFORMS:
         hass.async_add_job(

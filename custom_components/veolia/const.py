@@ -9,3 +9,7 @@ CONF_USERNAME = "username"
 CONF_PASSWORD = "password"
 API = "api"
 COORDINATOR = "coordinator"
+
+DAILY = "daily"
+HOURLY = "hourly"
+LAST_REPORT_TIMESTAMP = "last_report_timestamp"

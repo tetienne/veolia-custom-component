@@ -1,9 +1,8 @@
 """VeoliaEntity class"""
-from datetime import datetime
-
+from homeassistant.const import VOLUME_LITERS
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from .const import DOMAIN, NAME
+from .const import DOMAIN, LAST_REPORT_TIMESTAMP, NAME
 
 
 class VeoliaEntity(CoordinatorEntity):
@@ -27,7 +26,16 @@ class VeoliaEntity(CoordinatorEntity):
     @property
     def device_state_attributes(self):
         """Return the state attributes."""
-        last_timestamp = list(self.coordinator.data.keys())[-1]
         return {
-            "last_report": datetime.fromtimestamp(last_timestamp),
+            "last_report": self.coordinator.data[LAST_REPORT_TIMESTAMP],
         }
+
+    @property
+    def icon(self) -> str:
+        """Return the usage icon."""
+        return "mdi:water"
+
+    @property
+    def unit_of_measurement(self) -> str:
+        """Return liter as the unit measurement for water."""
+        return VOLUME_LITERS
