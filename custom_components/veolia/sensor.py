@@ -8,13 +8,15 @@ from .entity import VeoliaEntity
 async def async_setup_entry(hass, entry, async_add_devices):
     """Setup sensor platform."""
     coordinator = hass.data[DOMAIN][COORDINATOR]
-    async_add_devices(
-        [
-            VeoliaHourlyUsageSensor(coordinator, entry),
-            VeoliaDailyUsageSensor(coordinator, entry),
-            VeoliaMonthlyUsageSensor(coordinator, entry),
-        ]
-    )
+    sensors = [
+        VeoliaDailyUsageSensor(coordinator, entry),
+        VeoliaMonthlyUsageSensor(coordinator, entry),
+    ]
+    # HOURLY array is empty when hourly report is not enabled
+    if coordinator.data[HOURLY]:
+        sensors.append(VeoliaHourlyUsageSensor(coordinator, entry)),
+
+    async_add_devices(sensors)
 
 
 class VeoliaHourlyUsageSensor(VeoliaEntity):
