@@ -29,7 +29,7 @@ from .const import (
     PLATFORMS,
 )
 
-SCAN_INTERVAL = timedelta(seconds=30)
+SCAN_INTERVAL = timedelta(minutes=30)
 
 
 _LOGGER = logging.getLogger(__name__)
