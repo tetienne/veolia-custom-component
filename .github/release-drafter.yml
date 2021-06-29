@@ -4,7 +4,7 @@ exclude-labels:
   - 'Meta: Exclude From Changelog'
   - 'auto-changelog'
 categories:
-  - title: '⚠ Breaking changes'
+  - title: '⚠️ Breaking changes'
     label: 'breaking'
   - title: '🚀 Features'
     label: 'feature'
@@ -14,10 +14,6 @@ categories:
     label: 'documentation'
   - title: '🐛 Bug Fixes'
     label: 'bug'
-  - title: '👷 Continuous Integration'
-    label: 'ci'
-  - title: '🚨 Testing'
-    label: 'testing'
 template: |
   ## What's changed
   $CHANGES
