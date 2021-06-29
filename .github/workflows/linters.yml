@@ -1,34 +1,12 @@
-name: Push actions
+name: Linters (flake8, black, isort)
 
 on:
-  push:
-    branches:
-      - master
-      - dev
+  pull_request:
 
 jobs:
-  validate:
-    runs-on: "ubuntu-latest"
-    name: Validate
+  lint:
+    runs-on: ubuntu-latest
     steps:
-        - uses: "actions/checkout@v2"
-
-        - name: HACS validation
-          uses: "hacs/action@main"
-          with:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            CATEGORY: "integration"
-
-        - name: Hassfest validation
-          uses: "home-assistant/actions/hassfest@master"
-
-  style:
-    runs-on: "ubuntu-latest"
-    name: Check style formatting
-    steps:
-        - uses: "actions/checkout@v2"
-        - uses: "actions/setup-python@v1"
-          with:
-            python-version: "3.x"
-        - run: python3 -m pip install black
-        - run: black .
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: pre-commit/action@v2.0.0
