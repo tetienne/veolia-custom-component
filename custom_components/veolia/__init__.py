@@ -108,9 +108,9 @@ async def async_unload_entry(hass: HomeAssistantType, entry: ConfigEntry):
     """Unload a config entry."""
     hass.data[DOMAIN].pop(API, None)
     await asyncio.gather(
-        *[
+        *(
             hass.config_entries.async_forward_entry_unload(entry, component)
             for component in PLATFORMS
-        ]
+        )
     )
     return True
