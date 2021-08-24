@@ -65,6 +65,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
         if (
             previous_data
             and previous_data[LAST_REPORT_TIMESTAMP] == last_report_timestamp
+            and previous_data[DAILY][-1] > 0
         ):
             return previous_data
 
