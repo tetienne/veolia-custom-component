@@ -45,7 +45,12 @@ class VeoliaDailyUsageSensor(VeoliaEntity):
     @property
     def state(self):
         """Return the state of the sensor."""
-        return self.coordinator.data[DAILY][-1]
+        state = self.coordinator.data[DAILY][-1]
+
+        if state > 0:
+            return state
+
+        return None
 
 
 class VeoliaMonthlyUsageSensor(VeoliaEntity):
@@ -59,4 +64,8 @@ class VeoliaMonthlyUsageSensor(VeoliaEntity):
     @property
     def state(self):
         """Return the state of the sensor."""
-        return sum(self.coordinator.data[DAILY])
+        state = sum(self.coordinator.data[DAILY])
+        if state > 0:
+            return state
+
+        return None
