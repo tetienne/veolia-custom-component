@@ -22,10 +22,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
 class VeoliaHourlyUsageSensor(VeoliaEntity):
     """Monitors the hourly water usage."""
 
-    @property
-    def name(self):
-        """Return the name of the sensor."""
-        return "veolia_hourly_consumption"
+    _attr_name = "veolia_hourly_consumption"
 
     @property
     def state(self):
@@ -37,10 +34,7 @@ class VeoliaHourlyUsageSensor(VeoliaEntity):
 class VeoliaDailyUsageSensor(VeoliaEntity):
     """Monitors the daily water usage."""
 
-    @property
-    def name(self):
-        """Return the name of the sensor."""
-        return "veolia_daily_consumption"
+    _attr_name = "veolia_daily_consumption"
 
     @property
     def state(self):
@@ -56,10 +50,7 @@ class VeoliaDailyUsageSensor(VeoliaEntity):
 class VeoliaMonthlyUsageSensor(VeoliaEntity):
     """Monitors the monthly water usage."""
 
-    @property
-    def name(self):
-        """Return the name of the sensor."""
-        return "veolia_monthly_consumption"
+    _attr_name = "veolia_monthly_consumption"
 
     @property
     def state(self):
