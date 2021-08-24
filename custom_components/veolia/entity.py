@@ -12,11 +12,9 @@ class VeoliaEntity(CoordinatorEntity):
         """Initialize the entity."""
         super().__init__(coordinator)
         self.config_entry = config_entry
-
-    @property
-    def unique_id(self):
-        """Return a unique ID to use for this entity."""
-        return f"{self.config_entry.entry_id}_{self.name}"
+        self._attr_unique_id = f"{self.config_entry.entry_id}_{self.name}"
+        self._attr_unit_of_measurement = VOLUME_LITERS
+        self._attr_icon = "mdi:water"
 
     @property
     def device_info(self):
@@ -33,13 +31,3 @@ class VeoliaEntity(CoordinatorEntity):
         return {
             "last_report": self.coordinator.data[LAST_REPORT_TIMESTAMP],
         }
-
-    @property
-    def icon(self) -> str:
-        """Return the usage icon."""
-        return "mdi:water"
-
-    @property
-    def unit_of_measurement(self) -> str:
-        """Return liter as the unit measurement for water."""
-        return VOLUME_LITERS
