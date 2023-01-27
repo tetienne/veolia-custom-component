@@ -4,5 +4,5 @@ logger:
   default: info
   logs:
     custom_components.veolia: debug
-
-# debugpy:
+#debugpy:
+#  wait: true

@@ -9,9 +9,9 @@
 
 **This component will set up the following platforms.**
 
-Platform | Description
--- | --
-`sensor` | Show info from Veolia API.
+| Platform | Description                |
+| -------- | -------------------------- |
+| `sensor` | Show info from Veolia API. |
 
 ![logo][logoimg]
 
@@ -39,7 +39,7 @@ This project was generated from [@oncleben31](https://github.com/oncleben31)'s [
 
 Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [blueprint][blueprint] template
 
-***
+---
 
 [blueprint]: https://github.com/custom-components/blueprint
 [commits-shield]: https://img.shields.io/github/commit-activity/y/tetienne/veolia-custom-component.svg?style=for-the-badge
