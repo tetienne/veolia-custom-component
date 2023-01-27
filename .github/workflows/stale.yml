@@ -1,4 +1,4 @@
- # yamllint disable rule:line-length
+# yamllint disable rule:line-length
 name: Mark stale issues and pull requests
 
 on:
@@ -24,5 +24,5 @@ jobs:
             activity occurs. Thank you for your contributions.'
           days-before-stale: 30
           days-before-close: 5
-          stale-issue-label: 'no-issue-activity'
-          exempt-issue-labels: 'work-in-progress,blocked,help wanted,under investigation'
+          stale-issue-label: "no-issue-activity"
+          exempt-issue-labels: "work-in-progress,blocked,help wanted,under investigation"

@@ -7,20 +7,20 @@
 
 **This component will set up the following platforms.**
 
-Platform | Description
--- | --
-`sensor` | Show info from Veolia  API.
+| Platform | Description                |
+| -------- | -------------------------- |
+| `sensor` | Show info from Veolia API. |
 
 ![logo][logoimg]
 
 {% if not installed %}
+
 ## Installation
 
 1. Click install.
 1. In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "Veolia".
 
 {% endif %}
-
 
 <!---->
 
@@ -30,7 +30,7 @@ This project was generated from [@oncleben31](https://github.com/oncleben31)'s [
 
 Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [blueprint][blueprint] template
 
-***
+---
 
 [commits-shield]: https://img.shields.io/github/commit-activity/y/tetienne/veolia-custom-component.svg?style=for-the-badge
 [commits]: https://github.com/tetienne/veolia-custom-component/commits/main
