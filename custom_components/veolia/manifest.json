@@ -11,6 +11,6 @@
     "@tetienne"
   ],
   "requirements": [
-    "pyolia==0.2.1"
+    "pyolia==0.3.2"
   ]
 }
